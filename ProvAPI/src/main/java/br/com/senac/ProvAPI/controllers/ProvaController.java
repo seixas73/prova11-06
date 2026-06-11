@@ -24,17 +24,6 @@ public class ProvaController {
         return ResponseEntity.ok(provaService.listar(filtro));
     }
 
-    @GetMapping("/listar/{titulo}")
-    public ResponseEntity<Prova> listarPorTitulo(@PathVariable Prova titulo) {
-        try {
-            return ResponseEntity.ok(provaService.listarPorTitulo(titulo));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(null);
-        }
-    }
-
     @PostMapping("/criar")
     public ResponseEntity<Prova> criar(@RequestBody ProvaRequestDto prova) {
         try {
