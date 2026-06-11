@@ -1,0 +1,71 @@
+package br.com.senac.ProvAPI.controllers;
+
+import br.com.senac.ProvAPI.dtos.ProvaFiltroDto;
+import br.com.senac.ProvAPI.dtos.ProvaRequestDto;
+import br.com.senac.ProvAPI.entidades.Prova;
+import br.com.senac.ProvAPI.services.ProvaService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/prova")
+public class ProvaController {
+    private ProvaService provaService;
+
+    public ProvaController(ProvaService provaService) {
+        this.provaService = provaService;
+    }
+
+    @GetMapping("/listar")
+    public ResponseEntity<List<Prova>> listar(ProvaFiltroDto filtro) {
+        return ResponseEntity.ok(provaService.listar(filtro));
+    }
+
+    @GetMapping("/listar/{titulo}")
+    public ResponseEntity<Prova> listarPorTitulo(@PathVariable Prova titulo) {
+        try {
+            return ResponseEntity.ok(provaService.listarPorTitulo(titulo));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
+    @PostMapping("/criar")
+    public ResponseEntity<Prova> criar(@RequestBody ProvaRequestDto prova) {
+        try {
+            return ResponseEntity.ok(provaService.criar(prova));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PutMapping("/atualizar/{id}")
+    public ResponseEntity<Prova> atualizar(
+            @RequestBody ProvaRequestDto prova,
+            @PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(provaService.atualizar(id, prova));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        try {
+            provaService.deletar(id);
+            return ResponseEntity.ok(null);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
+}
